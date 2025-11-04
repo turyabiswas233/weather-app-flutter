@@ -10,7 +10,7 @@ ThemeData appTheme() {
       systemOverlayStyle: SystemUiOverlayStyle.light,
     ),
     floatingActionButtonTheme: FloatingActionButtonThemeData(
-      backgroundColor: ConstColors.bColor,
+      backgroundColor: ConstColors.fColor,
     ),
   );
 }

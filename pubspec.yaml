@@ -2,7 +2,7 @@ name: weatherapp
 description: "A new Flutter weather app project."
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
-version: 1.0.0+1
+version: 1.2.0+1
 
 environment:
   sdk: ^3.9.2
@@ -16,7 +16,6 @@ dependencies:
   flutter:
     sdk: flutter
   http: ^1.3.0
-  device_info_plus: ^12.1.0
   flutter_launcher_icons: ^0.14.3
   geolocator: ^14.0.2
   geocoding: ^4.0.0

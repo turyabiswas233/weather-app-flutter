@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'const_color.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
@@ -18,6 +20,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
   Map<String, dynamic>? weatherData;
   bool isLoading = false;
   DateTime date = DateTime.now();
+
 
   String _addLeadPadding(int number) {
     return number < 10 ? '0$number' : '$number';
@@ -140,8 +143,15 @@ class _WeatherScreenState extends State<WeatherScreen> {
       setState(() {
         isLoading = false;
       });
+
       debugPrint('Debugging location access: ${permission.toString()}');
-      return Future.error('Location permission denied');
+      // if network is not connected
+      if (permission == LocationPermission.denied) {
+        return Future.error('Location permissions are denied');
+      } else if (permission == LocationPermission.deniedForever) {
+        return Future.error(
+            'Location permissions are permanently denied, we cannot request permissions.');
+      }
     }
 
     Position position = await Geolocator.getCurrentPosition(
@@ -165,6 +175,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
   Future<void> fetchWeatherByLocation() async {
     setState(() {
       isLoading = true;
+      weatherData = null;
     });
 
     // ask permission for location and get lat-lng
@@ -194,6 +205,12 @@ class _WeatherScreenState extends State<WeatherScreen> {
   }
 
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: ConstColors.bColor,
@@ -208,7 +225,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
               'Weather App',
               style: TextStyle(
                 color: Colors.white,
-                fontWeight: FontWeight.w600,
+                fontWeight: FontWeight.w400,
               ),
             ),
           ],
@@ -218,6 +235,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
       ),
       body: RefreshIndicator(
         child: Container(
+          padding: const EdgeInsets.all(5),
           decoration: BoxDecoration(
             gradient: LinearGradient(
               begin: Alignment.topCenter,
@@ -227,41 +245,53 @@ class _WeatherScreenState extends State<WeatherScreen> {
           ),
           child: Column(
             children: [
-              // MacId(),
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: TextField(
-                  style: TextStyle(color: ConstColors.fColor),
-                  decoration: InputDecoration(
-                    hintText: 'Enter city name',
-                    hintStyle: TextStyle(color: ConstColors.grad3),
-                    border: OutlineInputBorder(),
-                    enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: ConstColors.boxColor),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(
-                        color: ConstColors.textColor.withAlpha(100),
-                      ),
-                    ),
-                    suffixIcon: IconButton(
-                      icon: Icon(Icons.search, color: Colors.white),
-                      onPressed: () {
-                        if (cityName.isNotEmpty) {
-                          fetchWeather(cityName);
-                        }
-                      },
-                    ),
+              TextField(
+                cursorColor: ConstColors.boxColor,
+                scrollPadding: EdgeInsets.all(10),
+                decoration: InputDecoration(
+                  filled: true,
+                  fillColor: ConstColors.textColor,
+                  hintText: 'Enter city name',
+                  hintStyle: TextStyle(
+                    color: ConstColors.boxColor.withAlpha(100),
                   ),
-                  onChanged: (value) {
-                    setState(() {
-                      cityName = value;
-                    });
-                  },
+                  border: OutlineInputBorder(
+                    borderSide: BorderSide(color: ConstColors.boxColor),
+                    borderRadius: BorderRadius.circular(40),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: ConstColors.boxColor),
+                    borderRadius: BorderRadius.circular(40),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.white),
+                    borderRadius: BorderRadius.circular(40),
+                  ),
+                  suffixIcon: IconButton(
+                    icon: Icon(Icons.search, color: ConstColors.grad1),
+                    onPressed: () {
+                      if (cityName.isNotEmpty) {
+                        fetchWeather(cityName);
+                      }
+                    },
+                  ),
                 ),
+                style: TextStyle(color: ConstColors.boxColor),
+                onChanged: (value) {
+                  setState(() {
+                    cityName = value;
+                  });
+                },
+                onSubmitted: (value) {
+                  fetchWeather(cityName);
+                },
               ),
               if (isLoading)
-                CircularProgressIndicator(color: ConstColors.loadingColor)
+                CircularProgressIndicator(
+                  color: ConstColors.loadingColor,
+                  strokeWidth: 6,
+                  padding: EdgeInsets.all(50),
+                )
               else if (weatherData != null)
                 Expanded(
                   child: Padding(
@@ -365,7 +395,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
                                 ),
                                 decoration: BoxDecoration(
                                   color: ConstColors.boxColor,
-                                  borderRadius: BorderRadius.circular(10),
+                                  borderRadius: BorderRadius.circular(20),
                                 ),
                                 child: Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
@@ -405,7 +435,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
                                 ),
                                 decoration: BoxDecoration(
                                   color: ConstColors.boxColor,
-                                  borderRadius: BorderRadius.circular(10),
+                                  borderRadius: BorderRadius.circular(20),
                                 ),
                                 child: Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
@@ -437,7 +467,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
                                 ),
                                 decoration: BoxDecoration(
                                   color: ConstColors.boxColor,
-                                  borderRadius: BorderRadius.circular(10),
+                                  borderRadius: BorderRadius.circular(20),
                                 ),
                                 child: Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
@@ -469,7 +499,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
                                 ),
                                 decoration: BoxDecoration(
                                   color: ConstColors.boxColor,
-                                  borderRadius: BorderRadius.circular(10),
+                                  borderRadius: BorderRadius.circular(20),
                                 ),
                                 child: Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
@@ -501,7 +531,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
                                 ),
                                 decoration: BoxDecoration(
                                   color: ConstColors.boxColor,
-                                  borderRadius: BorderRadius.circular(10),
+                                  borderRadius: BorderRadius.circular(20),
                                 ),
                                 child: Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
@@ -538,7 +568,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
                                 ),
                                 decoration: BoxDecoration(
                                   color: ConstColors.boxColor,
-                                  borderRadius: BorderRadius.circular(10),
+                                  borderRadius: BorderRadius.circular(20),
                                 ),
                                 child: Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
@@ -575,10 +605,18 @@ class _WeatherScreenState extends State<WeatherScreen> {
               else
                 Expanded(
                   child: Padding(
-                    padding: const EdgeInsets.all(16),
+                    padding: const EdgeInsets.only(
+                      top: 100,
+                      left: 20,
+                      right: 20,
+                    ),
                     child: Text(
                       'Search for a city to get weather information.',
-                      style: TextStyle(fontSize: 18, color: Colors.white30),
+                      style: TextStyle(
+                        fontSize: 28,
+                        color: ConstColors.textColor.withAlpha(180),
+                        fontWeight: FontWeight.w400,
+                      ),
                       textAlign: TextAlign.center,
                     ),
                   ),
@@ -591,10 +629,15 @@ class _WeatherScreenState extends State<WeatherScreen> {
         },
       ),
       floatingActionButton: FloatingActionButton(
-        backgroundColor: ConstColors.textColor,
+        backgroundColor: ConstColors.boxColor,
+        hoverColor: ConstColors.boxColor.withAlpha(200),
         onPressed: fetchWeatherByLocation,
         tooltip: 'Get weather by location',
-        child: Icon(Icons.location_on_rounded, color: ConstColors.grad3),
+        child: Icon(
+          Icons.location_on_rounded,
+          color: ConstColors.grad3,
+          size: 24,
+        ),
       ),
     );
   }
