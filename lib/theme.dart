@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'const_color.dart';
+import 'utils/const_style.dart';
 
 ThemeData appTheme() {
   return ThemeData(

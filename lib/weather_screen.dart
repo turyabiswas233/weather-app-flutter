@@ -1,6 +1,4 @@
-import 'dart:io';
-
-import 'const_color.dart';
+import 'utils/const_style.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:flutter/material.dart';
@@ -20,7 +18,6 @@ class _WeatherScreenState extends State<WeatherScreen> {
   Map<String, dynamic>? weatherData;
   bool isLoading = false;
   DateTime date = DateTime.now();
-
 
   String _addLeadPadding(int number) {
     return number < 10 ? '0$number' : '$number';
@@ -150,7 +147,8 @@ class _WeatherScreenState extends State<WeatherScreen> {
         return Future.error('Location permissions are denied');
       } else if (permission == LocationPermission.deniedForever) {
         return Future.error(
-            'Location permissions are permanently denied, we cannot request permissions.');
+          'Location permissions are permanently denied, we cannot request permissions.',
+        );
       }
     }
 
@@ -411,7 +409,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
                                       spacing: 5,
                                       children: [
                                         Text(
-                                          '${(weatherData!['wind']['speed'] * 3.6).toStringAsFixed(2)} km/h ',
+                                          '${(weatherData!['wind']['speed'] * 3.6).toStringAsFixed(2)} km/h',
                                           style: TextStyle(
                                             fontSize: 16,
                                             color: Colors.white,
