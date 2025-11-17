@@ -1,6 +1,6 @@
 name: weatherapp
 description: "A new Flutter weather app project."
-publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+publish_to: "none" # Remove this line if you wish to publish to pub.dev
 
 version: 1.2.0+1
 
@@ -19,20 +19,18 @@ dependencies:
   flutter_launcher_icons: ^0.14.3
   geolocator: ^14.0.2
   geocoding: ^4.0.0
-  lottie: ^3.3.1
-
+  lottie: ^3.3.2
+  google_fonts: ^6.3.2
   cupertino_icons: ^1.0.8
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
 
-
   flutter_lints: ^6.0.0
 
 # The following section is specific to Flutter packages.
 flutter:
   assets:
-    - assets/logo.png
+    - assets/
   uses-material-design: true
-

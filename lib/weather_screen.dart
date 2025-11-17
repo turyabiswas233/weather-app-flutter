@@ -1,3 +1,6 @@
+import 'package:flutter_launcher_icons/utils.dart';
+import 'package:google_fonts/google_fonts.dart';
+
 import 'utils/const_style.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
@@ -5,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'config.dart';
 import 'package:http/http.dart' as http;
+import 'package:lottie/lottie.dart';
 
 class WeatherScreen extends StatefulWidget {
   const WeatherScreen({super.key});
@@ -30,12 +34,12 @@ class _WeatherScreenState extends State<WeatherScreen> {
 
   String _convertPressure(int pressure) {
     // hPa to atm
-    return (pressure / 1013.25).toStringAsFixed(4).toString();
+    return (pressure * 0.750062).toStringAsFixed(0).toString();
   }
 
   String _degToDirection(int degree) {
     if (degree >= 0 && degree < 45) {
-      return 'N';
+      return 'North';
     } else if (degree >= 45 && degree < 90) {
       return 'NE';
     } else if (degree >= 90 && degree < 135) {
@@ -55,18 +59,14 @@ class _WeatherScreenState extends State<WeatherScreen> {
 
   Widget _buildWindDirection() {
     String direction = _degToDirection(weatherData!['wind']['deg']);
-    return Row(
-      children: [
-        Text(
-          direction,
-          style: TextStyle(
-            fontSize: 14,
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        _windIcon(direction),
-      ],
+    return Text(
+      direction,
+      style: TextStyle(
+        fontSize: 12,
+        color: ConstColors.fColor,
+        fontWeight: FontWeight.bold,
+      ),
+      // _windIcon(direction),
     );
   }
 
@@ -217,18 +217,26 @@ class _WeatherScreenState extends State<WeatherScreen> {
         title: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Image(image: AssetImage('assets/logo.png'), height: 30),
+            Image(
+              image: ResizeImage(
+                AssetImage('assets/logo.png'),
+                width: 28,
+                height: 28,
+                allowUpscaling: true,
+              ),
+            ),
             SizedBox(width: 10),
             Text(
               'Weather App',
               style: TextStyle(
                 color: Colors.white,
-                fontWeight: FontWeight.w400,
+                fontSize: 26,
+                fontWeight: FontWeight.w800,
               ),
             ),
           ],
         ),
-        iconTheme: IconThemeData(color: ConstColors.textColor),
+        iconTheme: IconThemeData(color: ConstColors.fColor),
         backgroundColor: ConstColors.bColorTitle,
       ),
       body: RefreshIndicator(
@@ -244,29 +252,29 @@ class _WeatherScreenState extends State<WeatherScreen> {
           child: Column(
             children: [
               TextField(
-                cursorColor: ConstColors.boxColor,
+                cursorColor: ConstColors.fColor,
                 scrollPadding: EdgeInsets.all(10),
                 decoration: InputDecoration(
                   filled: true,
-                  fillColor: ConstColors.textColor,
+                  fillColor: ConstColors.bColor,
                   hintText: 'Enter city name',
                   hintStyle: TextStyle(
-                    color: ConstColors.boxColor.withAlpha(100),
+                    color: ConstColors.fColor.withAlpha(100),
                   ),
                   border: OutlineInputBorder(
-                    borderSide: BorderSide(color: ConstColors.boxColor),
+                    borderSide: BorderSide(color: ConstColors.bColor),
                     borderRadius: BorderRadius.circular(40),
                   ),
                   enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: ConstColors.boxColor),
+                    borderSide: BorderSide(color: ConstColors.bColor),
                     borderRadius: BorderRadius.circular(40),
                   ),
                   focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.white),
+                    borderSide: BorderSide(color: ConstColors.fColor),
                     borderRadius: BorderRadius.circular(40),
                   ),
                   suffixIcon: IconButton(
-                    icon: Icon(Icons.search, color: ConstColors.grad1),
+                    icon: Icon(Icons.search, color: ConstColors.fColor),
                     onPressed: () {
                       if (cityName.isNotEmpty) {
                         fetchWeather(cityName);
@@ -274,7 +282,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
                     },
                   ),
                 ),
-                style: TextStyle(color: ConstColors.boxColor),
+                style: TextStyle(color: ConstColors.fColor, fontSize: 14),
                 onChanged: (value) {
                   setState(() {
                     cityName = value;
@@ -306,61 +314,53 @@ class _WeatherScreenState extends State<WeatherScreen> {
                           ),
                           margin: const EdgeInsets.only(bottom: 14),
                           decoration: BoxDecoration(
-                            color: ConstColors.boxColor,
+                            color: ConstColors.grad3.withAlpha(50),
                             borderRadius: BorderRadius.circular(20),
                           ),
-                          child: Row(
-                            spacing: 10,
+                          child: Column(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            mainAxisSize: MainAxisSize.max,
                             children: [
-                              // Left part UI
                               Padding(
                                 padding: const EdgeInsets.all(16),
                                 child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
                                     Text(
                                       '${weatherData!['name']}, ${weatherData!['sys']['country']}',
-                                      style: TextStyle(
+                                      style: GoogleFonts.poppins(
                                         fontSize: 16,
-                                        color: ConstColors.textColor,
-                                        fontWeight: FontWeight.bold,
+                                        color: ConstColors.fColor,
+                                        fontWeight: FontWeight.w700,
                                       ),
                                     ),
 
                                     Text(
                                       '${weatherData!['main']['temp'].toInt()}°C',
-                                      style: TextStyle(
-                                        fontSize: 50,
-                                        color: ConstColors.textColor,
-                                        fontWeight: FontWeight.bold,
+                                      style: GoogleFonts.poppins(
+                                        fontSize: 64,
+                                        color: ConstColors.fColor,
+                                        fontWeight: FontWeight.w700,
                                       ),
                                     ),
 
                                     SizedBox(height: 10),
                                     Text(
-                                      'Feels like ${weatherData!['main']['feels_like']}°C',
+                                      'Feeling ${weatherData!['main']['feels_like']}°C',
                                       style: TextStyle(
-                                        fontSize: 14,
-                                        color: ConstColors.textColor,
+                                        fontSize: 16,
+                                        color: ConstColors.fColor,
                                       ),
                                     ),
                                   ],
                                 ),
                               ),
 
-                              // Right part UI
                               Padding(
                                 padding: const EdgeInsets.all(16),
                                 child: Column(
                                   children: [
-                                    Icon(
-                                      _getWeatherIcon(
-                                        weatherData!['weather'][0]['main'],
-                                      ),
-                                      color: ConstColors.textColor,
-                                      size: 50,
+                                    _getWeatherIcon(
+                                      weatherData!['weather'][0]['main'],
                                     ),
                                     SizedBox(height: 10),
                                     Text(
@@ -369,225 +369,47 @@ class _WeatherScreenState extends State<WeatherScreen> {
                                           .toUpperCase(),
                                       style: TextStyle(
                                         fontSize: 12,
-                                        color: ConstColors.textColor,
+                                        color: ConstColors.fColor,
                                       ),
                                     ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Expanded(
-                          child: GridView.count(
-                            crossAxisCount: 2,
-                            mainAxisSpacing: 10,
-                            crossAxisSpacing: 10,
-                            children: [
-                              Container(
-                                padding: const EdgeInsets.only(
-                                  top: 5,
-                                  bottom: 5,
-                                  left: 16,
-                                  right: 16,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: ConstColors.boxColor,
-                                  borderRadius: BorderRadius.circular(20),
-                                ),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Icon(
-                                      Icons.air_rounded,
-                                      color: ConstColors.textColor,
-                                      size: 50,
-                                    ),
-
-                                    Row(
-                                      spacing: 5,
-                                      children: [
-                                        Text(
-                                          '${(weatherData!['wind']['speed'] * 3.6).toStringAsFixed(2)} km/h',
-                                          style: TextStyle(
-                                            fontSize: 16,
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.bold,
+                                    SizedBox(height: 10),
+                                    ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: ConstColors.bColor,
+                                        shadowColor: ConstColors.grad1,
+                                        elevation: 4,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(
+                                            20,
                                           ),
                                         ),
-
-                                        _buildWindDirection(),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              ),
-
-                              Container(
-                                padding: const EdgeInsets.only(
-                                  top: 5,
-                                  bottom: 5,
-                                  left: 16,
-                                  right: 16,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: ConstColors.boxColor,
-                                  borderRadius: BorderRadius.circular(20),
-                                ),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Icon(
-                                      Icons.water_drop_rounded,
-                                      color: ConstColors.textColor,
-                                      size: 50,
-                                    ),
-                                    Text(
-                                      'Humidity: ${weatherData!['main']['humidity']}%',
-                                      style: TextStyle(
-                                        fontSize: 16,
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold,
                                       ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-
-                              Container(
-                                padding: const EdgeInsets.only(
-                                  top: 5,
-                                  bottom: 5,
-                                  left: 16,
-                                  right: 16,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: ConstColors.boxColor,
-                                  borderRadius: BorderRadius.circular(20),
-                                ),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Icon(
-                                      Icons.thunderstorm_rounded,
-                                      color: ConstColors.textColor,
-                                      size: 50,
-                                    ),
-                                    Text(
-                                      'Chance of Rain: ${weatherData!['clouds']['all']}%',
-                                      style: TextStyle(
-                                        fontSize: 16,
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-
-                              Container(
-                                padding: const EdgeInsets.only(
-                                  top: 5,
-                                  bottom: 5,
-                                  left: 16,
-                                  right: 16,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: ConstColors.boxColor,
-                                  borderRadius: BorderRadius.circular(20),
-                                ),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Icon(
-                                      Icons.thermostat_rounded,
-                                      color: ConstColors.textColor,
-                                      size: 50,
-                                    ),
-                                    Text(
-                                      'Pressure: ${_convertPressure(weatherData!['main']['pressure'])} atm',
-                                      style: TextStyle(
-                                        fontSize: 16,
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-
-                              Container(
-                                padding: const EdgeInsets.only(
-                                  top: 5,
-                                  bottom: 5,
-                                  left: 16,
-                                  right: 16,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: ConstColors.boxColor,
-                                  borderRadius: BorderRadius.circular(20),
-                                ),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  spacing: 10,
-                                  children: [
-                                    Icon(
-                                      _getSunRiseSet(
-                                        weatherData!['sys']['sunrise'],
-                                      ),
-                                      color: ConstColors.textColor,
-                                      size: 50,
-                                    ),
-                                    Text(
-                                      _convertMilisecondToTime(
-                                        weatherData!['sys']['sunrise'],
-                                      ),
-                                      style: TextStyle(
-                                        fontSize: 16,
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.w600,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-
-                              Container(
-                                padding: const EdgeInsets.only(
-                                  top: 5,
-                                  bottom: 5,
-                                  left: 16,
-                                  right: 16,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: ConstColors.boxColor,
-                                  borderRadius: BorderRadius.circular(20),
-                                ),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  spacing: 10,
-                                  children: [
-                                    Icon(
-                                      _getSunRiseSet(
-                                        weatherData!['sys']['sunset'],
-                                      ),
-                                      color: ConstColors.textColor,
-                                      size: 50,
-                                    ),
-                                    Text(
-                                      _convertMilisecondToTime(
-                                        weatherData!['sys']['sunset'],
-                                      ),
-                                      style: TextStyle(
-                                        fontSize: 16,
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.w600,
+                                      onPressed: () {
+                                        //   view more about current weather with popup
+                                        _showDetailsGrid(context);
+                                      },
+                                      child: Container(
+                                        padding: EdgeInsets.all(2),
+                                        child: Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          spacing: 10,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Text(
+                                              'see more',
+                                              style: GoogleFonts.poppins(
+                                                fontSize: 12,
+                                                fontWeight: FontWeight.w500,
+                                                color: ConstColors.fColor,
+                                              ),
+                                            ),
+                                            Icon(
+                                              Icons.arrow_circle_right,
+                                              color: ConstColors.fColor,
+                                            ),
+                                          ],
+                                        ),
                                       ),
                                     ),
                                   ],
@@ -612,7 +434,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
                       'Search for a city to get weather information.',
                       style: TextStyle(
                         fontSize: 28,
-                        color: ConstColors.textColor.withAlpha(180),
+                        color: ConstColors.fColor.withAlpha(200),
                         fontWeight: FontWeight.w400,
                       ),
                       textAlign: TextAlign.center,
@@ -627,13 +449,13 @@ class _WeatherScreenState extends State<WeatherScreen> {
         },
       ),
       floatingActionButton: FloatingActionButton(
-        backgroundColor: ConstColors.boxColor,
-        hoverColor: ConstColors.boxColor.withAlpha(200),
+        backgroundColor: ConstColors.bColor,
+        hoverColor: ConstColors.bColor,
         onPressed: fetchWeatherByLocation,
         tooltip: 'Get weather by location',
         child: Icon(
           Icons.location_on_rounded,
-          color: ConstColors.grad3,
+          color: ConstColors.fColor,
           size: 24,
         ),
       ),
@@ -647,80 +469,179 @@ class _WeatherScreenState extends State<WeatherScreen> {
 
   Icon _windIcon(String direction) {
     switch (direction) {
-      case 'N':
+      case 'North':
         return Icon(
           Icons.arrow_upward_rounded,
-          color: ConstColors.textColor,
+          color: ConstColors.fColor,
           size: 15,
         );
       case 'NE':
         return Icon(
           Icons.arrow_forward_rounded,
-          color: ConstColors.textColor,
+          color: ConstColors.fColor,
           size: 15,
         );
       case 'East':
         return Icon(
           Icons.arrow_forward_rounded,
-          color: ConstColors.textColor,
+          color: ConstColors.fColor,
           size: 15,
         );
       case 'SE':
         return Icon(
           Icons.arrow_forward_rounded,
-          color: ConstColors.textColor,
+          color: ConstColors.fColor,
           size: 15,
         );
       case 'South':
         return Icon(
           Icons.arrow_downward_rounded,
-          color: ConstColors.textColor,
+          color: ConstColors.fColor,
           size: 15,
         );
       case 'SW':
         return Icon(
           Icons.arrow_back_rounded,
-          color: ConstColors.textColor,
+          color: ConstColors.fColor,
           size: 15,
         );
       case 'West':
         return Icon(
           Icons.arrow_back_rounded,
-          color: ConstColors.textColor,
+          color: ConstColors.fColor,
           size: 15,
         );
       case 'NW':
         return Icon(
           Icons.arrow_back_rounded,
-          color: ConstColors.textColor,
+          color: ConstColors.fColor,
           size: 15,
         );
       default:
         return Icon(
           Icons.arrow_upward_rounded,
-          color: ConstColors.textColor,
+          color: ConstColors.fColor,
           size: 15,
         );
     }
   }
 
-  IconData _getWeatherIcon(String weatherCondition) {
+  LottieBuilder _getWeatherIcon(String weatherCondition) {
     switch (weatherCondition.toLowerCase()) {
       case 'clear':
-        return Icons.wb_sunny_rounded;
+        return Lottie.asset('assets/sun.json');
       case 'clouds':
-        return Icons.cloud_rounded;
+        return Lottie.asset('assets/cloudy_sun.json');
       case 'thunderstorm':
-        return Icons.flash_on_rounded;
-      case 'snow':
-        return Icons.cloudy_snowing;
-      case 'drizzle':
       case 'rain':
-        return Icons.beach_access_rounded;
-      case 'atmosphere':
-        return Icons.grain_outlined;
+        return Lottie.asset('assets/thunderstorm.json');
+      case 'snow':
+        return Lottie.asset('assets/snow.json');
+      case 'drizzle':
+        return Lottie.asset('assets/drizzle.json');
       default:
-        return Icons.wb_cloudy_outlined;
+        return Lottie.asset('assets/cloudy_sun.json');
     }
+  }
+
+  // Inside your button's onPressed/onTap callback
+  void _showDetailsGrid(BuildContext context) {
+    showModalBottomSheet<void>(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: ConstColors.bColor,
+      // Allows the sheet to take up more than half the screen
+      builder: (BuildContext context) {
+        // This is the container for your slide-up view
+        return Padding(
+          padding: const EdgeInsets.all(10),
+          child: SizedBox(
+            height: MediaQuery.of(context).size.height * 0.8,
+            child: Column(
+              // Use Column to stack your title and the GridView
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                Container(
+                  width: 40,
+                  height: 5,
+                  decoration: BoxDecoration(
+                    color: ConstColors.fColor,
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                ),
+                const SizedBox(height: 10),
+                Expanded(
+                  child: GridView.count(
+                    crossAxisCount: 2,
+                    mainAxisSpacing: 10,
+                    crossAxisSpacing: 10,
+                    children: [
+                      infoCard(
+                        context,
+                        Icons.air_rounded,
+                        '${(weatherData!['wind']['speed'] * 3.6).toStringAsFixed(2)} km/h',
+                      ),
+                      infoCard(
+                        context,
+                        Icons.water_drop_rounded,
+                        'Humidity: ${weatherData!['main']['humidity']}%',
+                      ),
+                      infoCard(
+                        context,
+                        Icons.thunderstorm_rounded,
+                        'Chance of Rain: ${weatherData!['clouds']['all']}%',
+                      ),
+                      infoCard(
+                        context,
+                        Icons.thermostat_rounded,
+                        'Pressure: ${_convertPressure(weatherData!['main']['pressure'])} mmHg',
+                      ),
+                      infoCard(
+                        context,
+                        _getSunRiseSet(weatherData!['sys']['sunrise']),
+                        _convertMilisecondToTime(
+                          weatherData!['sys']['sunrise'],
+                        ),
+                      ),
+                      infoCard(
+                        context,
+                        _getSunRiseSet(weatherData!['sys']['sunset']),
+                        _convertMilisecondToTime(weatherData!['sys']['sunset']),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget infoCard(BuildContext context, IconData icon, String text) {
+    return Container(
+      padding: const EdgeInsets.only(top: 5, bottom: 5, left: 16, right: 16),
+      decoration: BoxDecoration(
+        color: ConstColors.fColor,
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        spacing: 10,
+        children: [
+          Icon(icon, color: ConstColors.bColor, size: 44),
+          Text(
+            text,
+            style: TextStyle(
+              fontSize: 12,
+              color: Colors.white,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
