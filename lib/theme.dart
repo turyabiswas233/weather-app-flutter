@@ -6,15 +6,17 @@ import 'utils/const_style.dart';
 ThemeData appTheme() {
   return ThemeData(
     visualDensity: VisualDensity.adaptivePlatformDensity,
+
     appBarTheme: AppBarTheme(
       actionsIconTheme: IconThemeData(color: ConstColors.grad1),
       foregroundColor: ConstColors.fColor,
+      backgroundColor: ConstColors.grad2,
       systemOverlayStyle: SystemUiOverlayStyle.light,
     ),
-    fontFamily: GoogleFonts.poppins().fontFamily,
-    fontFamilyFallback: GoogleFonts.poppins().fontFamilyFallback,
+    fontFamily: GoogleFonts.inter().fontFamily,
+    fontFamilyFallback: GoogleFonts.inter().fontFamilyFallback,
     floatingActionButtonTheme: FloatingActionButtonThemeData(
-      backgroundColor: ConstColors.fColor,
+      backgroundColor: ConstColors.grad2,
     ),
   );
 }

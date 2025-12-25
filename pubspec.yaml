@@ -20,8 +20,11 @@ dependencies:
   geolocator: ^14.0.2
   geocoding: ^4.0.0
   lottie: ^3.3.2
+  permission_handler: ^12.0.1
   google_fonts: ^6.3.2
   cupertino_icons: ^1.0.8
+  fl_chart: ^1.1.1
+  intl: ^0.20.2
 
 dev_dependencies:
   flutter_test:

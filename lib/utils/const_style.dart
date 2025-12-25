@@ -3,16 +3,16 @@ import 'package:flutter/material.dart';
 class ConstColors {
   ConstColors._();
 
-  static const Color fColor =Color.fromARGB(237, 2, 13, 30);
-  static const bColor =  Color.fromARGB(255, 255, 255, 255);
+  static const Color fColor =Color.fromARGB(250,255,255,255);
+  static const Color bColor =  Color.fromARGB(255, 2, 13, 30);
 
   // gradient colors grad
-  static const grad1 = Color.fromARGB(249, 202, 233, 244);
-  static const grad2 = Color.fromARGB(181, 203, 229, 243);
-  static const grad3 = Color.fromARGB(181, 106, 119, 130);
+  static const Color grad1 = Color.fromARGB(255, 159, 214, 255);
+  static const Color grad2 = Color.fromARGB(181, 0, 113, 189);
+  static const Color grad3 = Color.fromARGB(181, 2, 50, 112);
 
-  static const bColorTitle = fColor;
-  static const loadingColor = fColor;
+  static const Color bColorTitle = fColor;
+  static const Color loadingColor =  Color.fromARGB(255, 41, 106, 227);
 
   //error code
   static const Color errorFg = Color.fromARGB(255, 255, 67, 67);
