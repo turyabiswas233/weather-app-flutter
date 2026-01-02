@@ -1,8 +1,5 @@
-import 'dart:ui';
-
-import 'package:google_fonts/google_fonts.dart';
 import 'package:weatherapp/chartbox.dart';
-
+import 'package:flutter/services.dart';
 import 'utils/const_style.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
@@ -41,26 +38,6 @@ class _WeatherScreenState extends State<WeatherScreen> {
   String _convertPressure(int pressure) {
     // hPa to atm
     return (pressure * 0.750062).toStringAsFixed(0).toString();
-  }
-
-  String _degToDirection(int degree) {
-    if (degree >= 0 && degree < 45) {
-      return 'North';
-    } else if (degree >= 45 && degree < 90) {
-      return 'NE';
-    } else if (degree >= 90 && degree < 135) {
-      return 'East';
-    } else if (degree >= 135 && degree < 180) {
-      return 'SE';
-    } else if (degree >= 180 && degree < 225) {
-      return 'South';
-    } else if (degree >= 225 && degree < 270) {
-      return 'SW';
-    } else if (degree >= 270 && degree < 315) {
-      return 'West';
-    } else {
-      return 'NW';
-    }
   }
 
   Future<void> fetchWeather(String city) async {
@@ -152,6 +129,11 @@ class _WeatherScreenState extends State<WeatherScreen> {
   }
 
   Future<void> fetchWeatherByLocation() async {
+    try {
+      HapticFeedback.mediumImpact();
+    } catch (e) {
+      debugPrint(e.toString());
+    }
     setState(() {
       isLoading = true;
       weatherData = null;
@@ -431,23 +413,35 @@ class _WeatherScreenState extends State<WeatherScreen> {
         ),
       ),
 
-      floatingActionButton: ClipRRect(
-        borderRadius: BorderRadiusGeometry.circular(10),
-        child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 4, sigmaY: 4),
-          child: FloatingActionButton(
-            backgroundColor: ConstColors.grad1.withAlpha(50),
-            hoverColor: ConstColors.bColor.withAlpha(50),
-            onPressed: fetchWeatherByLocation,
-            tooltip: 'Get weather by location',
-            child: Icon(
-              Icons.location_on_rounded,
-              color: ConstColors.grad1,
-              size: 24,
-            ),
-          ),
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: ConstColors.grad1.withAlpha(50),
+        hoverColor: ConstColors.bColor.withAlpha(50),
+        onPressed: fetchWeatherByLocation,
+        tooltip: 'Get weather by location',
+        child: Icon(
+          Icons.location_on_rounded,
+          color: ConstColors.grad1,
+          size: 24,
         ),
       ),
+
+      // floatingActionButton: ClipRRect(
+      //   borderRadius: BorderRadiusGeometry.circular(10),
+      //   child: BackdropFilter(
+      //     filter: ImageFilter.blur(sigmaX: 4, sigmaY: 4),
+      //     child: FloatingActionButton(
+      //       backgroundColor: ConstColors.grad1.withAlpha(50),
+      //       hoverColor: ConstColors.bColor.withAlpha(50),
+      //       onPressed: fetchWeatherByLocation,
+      //       tooltip: 'Get weather by location',
+      //       child: Icon(
+      //         Icons.location_on_rounded,
+      //         color: ConstColors.grad1,
+      //         size: 24,
+      //       ),
+      //     ),
+      //   ),
+      // ),
     );
   }
 
@@ -508,69 +502,63 @@ class _WeatherScreenState extends State<WeatherScreen> {
       // Allows the sheet to take up more than half the screen
       builder: (BuildContext context) {
         // This is the container for your slide-up view
-        return ClipRRect(
-          borderRadius: BorderRadiusGeometry.circular(20),
-          child: BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
-            child: Padding(
-              padding: const EdgeInsets.all(10),
-              child: SizedBox(
-                height: MediaQuery.of(context).size.height * 0.8,
-                child: Column(
-                  // Use Column to stack your title and the GridView
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    Container(
-                      width: 40,
-                      height: 5,
-                      decoration: BoxDecoration(
-                        color: ConstColors.grad1,
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                    ),
-                    const SizedBox(height: 10),
-                    Expanded(
-                      child: GridView.count(
-                        crossAxisCount: 2,
-                        mainAxisSpacing: 10,
-                        crossAxisSpacing: 10,
-                        children: [
-                          infoCard(
-                            context,
-                            Icons.air_rounded,
-                            '${(weatherData!['wind']['speed'] * 3.6).toStringAsFixed(2)} km/h',
-                          ),
-                          infoCard(
-                            context,
-                            Icons.water_drop_rounded,
-                            'Humidity: ${weatherData!['main']['humidity']}%',
-                          ),
-                          infoCard(
-                            context,
-                            Icons.thunderstorm_rounded,
-                            'Chance of Rain: ${weatherData!['clouds']['all']}%',
-                          ),
-                          infoCard(
-                            context,
-                            Icons.thermostat_rounded,
-                            'Pressure: ${_convertPressure(weatherData!['main']['pressure'])} mmHg',
-                          ),
-                          infoCard(
-                            context,
-                            _getSunRiseSet(weatherData!['sys']['sunrise']),
-                            "Sunrise: ${_convertMilisecondToTime(weatherData!['sys']['sunrise'])}",
-                          ),
-                          infoCard(
-                            context,
-                            _getSunRiseSet(weatherData!['sys']['sunset']),
-                            "Sunset: ${_convertMilisecondToTime(weatherData!['sys']['sunset'])}",
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
+        return Padding(
+          padding: EdgeInsetsGeometry.all(5),
+          child: SizedBox(
+            height: MediaQuery.of(context).size.height * 0.8,
+            child: Column(
+              // Use Column to stack your title and the GridView
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                Container(
+                  width: 40,
+                  height: 6,
+                  decoration: BoxDecoration(
+                    color: ConstColors.grad1,
+                    borderRadius: BorderRadius.circular(20),
+                  ),
                 ),
-              ),
+                const SizedBox(height: 10),
+                Expanded(
+                  child: GridView.count(
+                    crossAxisCount: 2,
+                    mainAxisSpacing: 10,
+                    crossAxisSpacing: 10,
+                    children: [
+                      infoCard(
+                        context,
+                        Icons.air_rounded,
+                        '${(weatherData!['wind']['speed'] * 3.6).toStringAsFixed(2)} km/h',
+                      ),
+                      infoCard(
+                        context,
+                        Icons.water_drop_rounded,
+                        'Humidity: ${weatherData!['main']['humidity']}%',
+                      ),
+                      infoCard(
+                        context,
+                        Icons.thunderstorm_rounded,
+                        'Chance of Rain: ${weatherData!['clouds']['all']}%',
+                      ),
+                      infoCard(
+                        context,
+                        Icons.thermostat_rounded,
+                        'Pressure: ${_convertPressure(weatherData!['main']['pressure'])} mmHg',
+                      ),
+                      infoCard(
+                        context,
+                        _getSunRiseSet(weatherData!['sys']['sunrise']),
+                        "Sunrise: ${_convertMilisecondToTime(weatherData!['sys']['sunrise'])}",
+                      ),
+                      infoCard(
+                        context,
+                        _getSunRiseSet(weatherData!['sys']['sunset']),
+                        "Sunset: ${_convertMilisecondToTime(weatherData!['sys']['sunset'])}",
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ),
           ),
         );

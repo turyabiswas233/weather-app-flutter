@@ -54,35 +54,29 @@ class ChartBox extends StatelessWidget {
         borderRadius: BorderRadius.circular(40),
         border: Border.all(color: ConstColors.fColor.withAlpha(50)),
       ),
-      child: ClipRRect(
-        borderRadius: BorderRadiusGeometry.circular(40),
-        child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                formattedTime,
-                style: const TextStyle(color: Colors.white70, fontSize: 13),
-              ),
-              const SizedBox(height: 8),
-              Image.network(
-                "https://openweathermap.org/img/wn/$iconCode@2x.png",
-                width: 45,
-                height: 45,
-              ),
-              const SizedBox(height: 8),
-              Text(
-                temp,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ],
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            formattedTime,
+            style: const TextStyle(color: Colors.white70, fontSize: 13),
           ),
-        ),
+          const SizedBox(height: 8),
+          Image.network(
+            "https://openweathermap.org/img/wn/$iconCode@2x.png",
+            width: 45,
+            height: 45,
+          ),
+          const SizedBox(height: 8),
+          Text(
+            temp,
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ],
       ),
     );
   }
