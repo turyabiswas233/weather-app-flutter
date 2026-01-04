@@ -5,9 +5,9 @@ flutter_native_splash:
   web: false
 
   color: "#121233"
-  background_image: assets/bg.png 
+  # background_image: assets/bg.png 
   #! ANDROID 12+ configuration:
   android_12:
     # background color
     color: "#121233"
-    background_image: assets/bg.png 
+    # background_image: assets/bg.png 

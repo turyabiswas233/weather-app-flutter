@@ -3,7 +3,6 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 import 'services/weather_service.dart';
 import 'utils/const_style.dart';
@@ -439,9 +438,9 @@ class _LocationManagerScreenState extends State<LocationManagerScreen> {
             hoverColor: ConstColors.bColor.withAlpha(50),
             onPressed: _isAdding ? null : _addCurrentLocation,
             tooltip: 'Add current location',
-            child: const Icon(
+            child: Icon(
               Icons.location_on_rounded,
-              color: ConstColors.grad3,
+              color: ConstColors.fColor.withAlpha(100),
               size: 24,
             ),
           ),
