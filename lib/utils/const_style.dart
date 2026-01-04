@@ -7,16 +7,16 @@ class ConstColors {
   static const Color bColor =  Color.fromARGB(255, 2, 13, 30);
 
   // gradient colors grad
-  static const Color grad1 = Color.fromARGB(255, 159, 214, 255);
-  static const Color grad2 = Color.fromARGB(181, 0, 113, 189);
-  static const Color grad3 = Color.fromARGB(181, 2, 50, 112);
+  static const Color grad1 = Color.fromARGB(240, 42, 51, 69);
+  static const Color grad2 = Color.fromARGB(255, 22, 22, 34);
+  static const Color grad3 = Color.fromARGB(255, 7, 7, 9);
 
   static const Color bColorTitle = fColor;
   static const Color loadingColor =  Color.fromARGB(255, 41, 106, 227);
 
   //error code
-  static const Color errorFg = Color.fromARGB(255, 255, 67, 67);
-  static const Color errorBg = Color.fromARGB(255, 255, 231, 228);
+  static const Color errorFg = Color.fromARGB(255, 224, 224, 255);
+  static const Color errorBg = Color.fromARGB(202, 253, 63, 98);
 }
 
 class ConstSizes {

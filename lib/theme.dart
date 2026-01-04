@@ -10,7 +10,7 @@ ThemeData appTheme() {
     appBarTheme: AppBarTheme(
       actionsIconTheme: IconThemeData(color: ConstColors.grad1),
       foregroundColor: ConstColors.fColor,
-      backgroundColor: ConstColors.grad2,
+      backgroundColor: ConstColors.grad1,
       systemOverlayStyle: SystemUiOverlayStyle.light,
     ),
     fontFamily: GoogleFonts.inter().fontFamily,

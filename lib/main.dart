@@ -1,14 +1,15 @@
 import 'dart:io';
-
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'theme.dart';
-import 'weather_screen.dart';
+import 'location_manager_screen.dart';
 
-void main() async {
+void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  await permissionHandler();
-  runApp(MyApp());
+  WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
+  runApp(const MyApp());
 }
 
 Future<void> permissionHandler() async {
@@ -22,15 +23,38 @@ Future<void> permissionHandler() async {
   }
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  void splashScreen() async {
+    debugPrint('ready in 3...');
+    await Future.delayed(const Duration(seconds: 1));
+    debugPrint('ready in 2...');
+    await Future.delayed(const Duration(seconds: 1));
+    debugPrint('ready in 1...');
+    await Future.delayed(const Duration(seconds: 1));
+    debugPrint('go!');
+    FlutterNativeSplash.remove();
+    await permissionHandler();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    splashScreen();
+  }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Weather App',
+      title: 'TB Weather',
       theme: appTheme(),
-      home: WeatherScreen(),
+      home: const LocationManagerScreen(),
     );
   }
 }

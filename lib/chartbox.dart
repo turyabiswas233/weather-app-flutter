@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:weatherapp/utils/const_style.dart';
@@ -52,7 +50,7 @@ class ChartBox extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white12,
         borderRadius: BorderRadius.circular(40),
-        border: Border.all(color: ConstColors.fColor.withAlpha(50)),
+        border: Border.all(color: ConstColors.fColor.withAlpha(25)),
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
